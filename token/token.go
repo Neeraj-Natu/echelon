@@ -13,8 +13,8 @@ const (
 
 	// Indentifiers and literals
 	VARIABLE = "VAR" // add, foobar, x, y, ......
-	INT = "INT" // 123424
-	FLOAT = "FLOAT" // 1231234.31251512
+	INT = "INTEGER" // 123424
+	FLOAT = "FLOAT"
 
 	// Operators
 	ASSIGN = "="
