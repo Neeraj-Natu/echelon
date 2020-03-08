@@ -13,16 +13,16 @@ func TestNextToken(t *testing.T) {
 		expectedLiteral string
 	} {
 		{token.ASSIGN, "="},
-		{token.PLUS = "+"},
-		{token.LPAREN = "("},
-		{token.RPAREN = ")"},
-		{token.LCBRACE = "{"},
-		{token.RCBRACE = "}"},
-		{token.LBRACE = "["},
-		{token.RBRACE = "]"},
-		{token.COMMA = ","},
-		{token.SEMICOLON = ";"},
-		{token.COLON = ":"},
+		{token.PLUS, "+"},
+		{token.LPAREN, "("},
+		{token.RPAREN, ")"},
+		{token.LCBRACE, "{"},
+		{token.RCBRACE, "}"},
+		{token.LBRACE, "["},
+		{token.RBRACE, "]"},
+		{token.COMMA, ","},
+		{token.SEMICOLON, ";"},
+		{token.COLON, ":"},
 		{token.EOF, ""},
 	}
 

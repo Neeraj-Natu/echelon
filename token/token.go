@@ -53,8 +53,8 @@ const (
 )
 
 var keywords = map[string]TokenType {
-	"func": FUNCTION,
-	"let": LET,
+	"func":   FUNCTION,
+	"let":    LET,
 	"true":   TRUE,
 	"false":  FALSE,
 	"if":     IF,
@@ -62,9 +62,9 @@ var keywords = map[string]TokenType {
 	"return": RETURN,
 }
 
-func LookupIdent(ident string TokenType) {
+func LookupIdent(ident string) TokenType {
 	if tok, ok := keywords[ident]; ok {
-		retun tok
+		return tok
 	}
-	retun VARIABLE
+	return VARIABLE
 }
