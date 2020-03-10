@@ -5,7 +5,6 @@ import (
 	"unicode"
 )
 
-
 type Lexer struct {
 	input        string
 	position     int  // current position in input (points to current char)
@@ -21,7 +20,7 @@ func New(input string) *Lexer {
 
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
-	
+
 	l.eatWhitespaces()
 
 	switch l.ch {
@@ -30,46 +29,46 @@ func (l *Lexer) NextToken() token.Token {
 	case '!':
 		tok = newToken(token.BANG, l.ch)
 	case '+':
-        tok = newToken(token.PLUS, l.ch)	
+		tok = newToken(token.PLUS, l.ch)
 	case '-':
 		tok = newToken(token.MINUS, l.ch)
 	case '*':
-		tok = newToken(token.ASTERISK,l.ch)
+		tok = newToken(token.ASTERISK, l.ch)
 	case '/':
-		tok = newToken(token.SLASH,l.ch)
+		tok = newToken(token.SLASH, l.ch)
 	case '&':
-		tok = newToken(token.AND,l.ch)
+		tok = newToken(token.AND, l.ch)
 	case '>':
-		tok = newToken(token.GT,l.ch)
+		tok = newToken(token.GT, l.ch)
 	case '<':
-		tok = newToken(token.LT,l.ch)								
-    case ';':
-        tok = newToken(token.SEMICOLON, l.ch)
-    case '(':
-        tok = newToken(token.LPAREN, l.ch)
-    case ')':
+		tok = newToken(token.LT, l.ch)
+	case ';':
+		tok = newToken(token.SEMICOLON, l.ch)
+	case '(':
+		tok = newToken(token.LPAREN, l.ch)
+	case ')':
 		tok = newToken(token.RPAREN, l.ch)
 	case '[':
 		tok = newToken(token.LBRACE, l.ch)
 	case ']':
-		tok = newToken(token.RBRACE, l.ch)	
-    case ',':
+		tok = newToken(token.RBRACE, l.ch)
+	case ',':
 		tok = newToken(token.COMMA, l.ch)
 	case ':':
-        tok = newToken(token.COLON, l.ch)	
-    case '{':
-        tok = newToken(token.LCBRACE, l.ch)
-    case '}':
-        tok = newToken(token.RCBRACE, l.ch)
-    case 0:
-        tok.Literal = ""
+		tok = newToken(token.COLON, l.ch)
+	case '{':
+		tok = newToken(token.LCBRACE, l.ch)
+	case '}':
+		tok = newToken(token.RCBRACE, l.ch)
+	case 0:
+		tok.Literal = ""
 		tok.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
 			tok.Literal = l.readIdentifier()
 			tok.Type = token.LookupIdent(tok.Literal)
 			return tok
-		}	else if isInt(l.ch) {
+		} else if isInt(l.ch) {
 			tok.Type = token.INT
 			tok.Literal = l.readNumber()
 		} else if isFloat(l.ch) {
@@ -78,14 +77,14 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
 		}
-    }
+	}
 
-    l.readChar()
-    return tok
+	l.readChar()
+	return tok
 }
 
 func (l *Lexer) eatWhitespaces() {
-	for l.ch == ' ' || l.ch == '\n' || l.ch == '\r' || l.ch == '\t'{
+	for l.ch == ' ' || l.ch == '\n' || l.ch == '\r' || l.ch == '\t' {
 		l.readChar()
 	}
 }
@@ -137,7 +136,6 @@ func isInt(ch rune) bool {
 func isFloat(ch rune) bool {
 	return unicode.IsDigit(ch)
 }
-
 
 func newToken(tokenType token.TokenType, ch rune) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}

@@ -1,17 +1,17 @@
 package lexer
 
 import (
-	"testing"
 	"github.com/Neeraj-Natu/shifu/token"
+	"testing"
 )
 
 func TestNextToken(t *testing.T) {
 	input := `=+(){}[],;:`
 
 	tests := []struct {
-		expectedType token.TokenType
+		expectedType    token.TokenType
 		expectedLiteral string
-	} {
+	}{
 		{token.ASSIGN, "="},
 		{token.PLUS, "+"},
 		{token.LPAREN, "("},
@@ -45,7 +45,7 @@ func TestNextToken(t *testing.T) {
 
 func TestAdvancedToken(t *testing.T) {
 	input :=
-	`
+		`
 	let five = 5;
 	let ten = 10;
 	let add = func(x, y) {
@@ -113,6 +113,6 @@ func TestAdvancedToken(t *testing.T) {
 			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q",
 				i, tt.expectedLiteral, tok.Literal)
 		}
-		
+
 	}
 }
