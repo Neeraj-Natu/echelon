@@ -13,7 +13,7 @@ const (
 
 	// Indentifiers and literals
 	VARIABLE = "VAR"     // add, foobar, x, y, ......
-	NUMBER   = "NUMBER" // 123424
+	INT   = "INTEGER" // 123424
 
 	// Operators
 	ASSIGN   = "="
@@ -49,16 +49,28 @@ const (
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
 	LET      = "LET"
+	RANGE    = "RANGE"
+	FOR      = "FOR"
+	IN       = "IN"
+	WHILE    = "WHILE"
+	LENGTH   = "LENGTH"
+	CONTAINS = "CONTAINS"
 )
 
 var keywords = map[string]TokenType{
-	"func":   FUNCTION,
-	"let":    LET,
-	"true":   TRUE,
-	"false":  FALSE,
-	"if":     IF,
-	"else":   ELSE,
-	"return": RETURN,
+	"func":     FUNCTION,
+	"let":      LET,
+	"true":     TRUE,
+	"false":    FALSE,
+	"if":       IF,
+	"else":     ELSE,
+	"return":   RETURN,
+	"for": 	    FOR,
+	"in": 		IN,
+	"while":    WHILE,
+	"len":      LENGTH,
+	"range":    RANGE,
+	"contains": CONTAINS,
 }
 
 func LookupIdent(ident string) TokenType {
