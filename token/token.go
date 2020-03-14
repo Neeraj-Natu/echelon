@@ -13,7 +13,7 @@ const (
 
 	// Indentifiers and literals
 	VARIABLE = "VAR"     // add, foobar, x, y, ......
-	INT   = "INTEGER" // 123424
+	INT      = "INTEGER" // 123424
 
 	// Operators
 	ASSIGN   = "="
@@ -22,13 +22,13 @@ const (
 	BANG     = "!"
 	ASTERISK = "*"
 	SLASH    = "/"
-	AND      = "&"
+	AND      = "&&"
 	OR       = "||"
+	LT       = "<"
+	GT       = ">"
 
 	EQ     = "=="
 	NOT_EQ = "!="
-	LT     = "<"
-	GT     = ">"
 
 	// Delimiters
 	COMMA     = ","
@@ -47,6 +47,7 @@ const (
 	FALSE    = "FALSE"
 	IF       = "IF"
 	ELSE     = "ELSE"
+	ELSEIF   = "ELSEIF"
 	RETURN   = "RETURN"
 	LET      = "LET"
 	RANGE    = "RANGE"
@@ -64,9 +65,10 @@ var keywords = map[string]TokenType{
 	"false":    FALSE,
 	"if":       IF,
 	"else":     ELSE,
+	"elseif":   ELSEIF,
 	"return":   RETURN,
-	"for": 	    FOR,
-	"in": 		IN,
+	"for":      FOR,
+	"in":       IN,
 	"while":    WHILE,
 	"len":      LENGTH,
 	"range":    RANGE,
