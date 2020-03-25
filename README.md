@@ -1,10 +1,11 @@
 # shifu
 <p align="center">
 <img width="360" height="360" src="imgs/shifu.jpg">
-
-
-This is a personal project intended to write my own interpreter in go lang.
 </p>
+
+<div align="center">
+This is a personal project intended to write my own interpreter in go lang.
+</div>
 
 ### *Language Featuers*:
 
