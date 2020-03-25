@@ -7,6 +7,10 @@
 This is a personal project intended to write my own interpreter in go lang.
 </div>
 
+<br/>
+
+---
+
 ### *Language Featuers*:
 
 - Dynamically typed
