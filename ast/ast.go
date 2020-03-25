@@ -36,13 +36,13 @@ func (p *Program) TokenLiteral() string {
 
 // Any let statement has 3 parts first the token LET, second the variable name and third the expression that it points to on the right side of equals sign.
 type LetStatement struct {
-	Token token.Token  // the token.LET token
-	Name *Variable
+	Token token.Token // the token.LET token
+	Name  *Variable
 	Value Expression
 }
 
-func (ls *LetStatement) statementNode() {}
-func (ls *LetStatement) TokenLiteral() string {return ls.Token.Literal}
+func (ls *LetStatement) statementNode()       {}
+func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal }
 
 // This is to hold the variable in the let statement. This implements the expression interface.
 type Variable struct {
@@ -50,5 +50,5 @@ type Variable struct {
 	Value string
 }
 
-func (i *Variable) expressionNode() {}
-func (i *Variable) TokenLiteral() string {return i.Token.Literal}
+func (i *Variable) expressionNode()      {}
+func (i *Variable) TokenLiteral() string { return i.Token.Literal }
