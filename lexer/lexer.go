@@ -2,14 +2,13 @@ package lexer
 
 import (
 	"github.com/Neeraj-Natu/shifu/token"
-	"unicode"
 )
 
 type Lexer struct {
 	input        string
 	position     int  // current position in input (points to current char)
 	readPosition int  // current reading position in input (after current char)
-	ch           rune // current char under examination
+	ch           byte // current char under examination
 }
 
 func New(input string) *Lexer {
@@ -121,8 +120,7 @@ func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
 	} else {
-		r := []rune(l.input)
-		l.ch = r[l.readPosition]
+		l.ch = l.input[l.readPosition]
 	}
 	l.position = l.readPosition
 	l.readPosition += 1
@@ -144,32 +142,30 @@ func (l *Lexer) readNumber() string {
 	return l.input[position:l.position]
 }
 
-func isLetter(ch rune) bool {
+func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
-func isNumber(ch rune) bool {
-	return unicode.IsDigit(ch)
+func isNumber(ch byte) bool {
+	return '0' <= ch && ch <= '9'
 }
 
-func newToken(tokenType token.TokenType, ch rune) token.Token {
+func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
-func (l *Lexer) seekNextChar() rune {
+func (l *Lexer) seekNextChar() byte {
 	if l.readPosition >= len(l.input) {
 		return 0
 	} else {
-		r := []rune(l.input)
-		return r[l.readPosition]
+		return l.input[l.readPosition]
 	}
 }
 
-func (l *Lexer) seekFurtherChar(i int) rune {
+func (l *Lexer) seekFurtherChar(i int) byte {
 	if (l.position + i) >= len(l.input) {
 		return 0
 	} else {
-		r := []rune(l.input)
-		return r[i]
+		return l.input[i]
 	}
 }
