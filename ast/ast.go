@@ -22,6 +22,7 @@ type Expression interface {
 	expressionNode()
 }
 
+//Program is a collection of numerous statements
 type Program struct {
 	Statements []Statement
 }
