@@ -22,7 +22,8 @@ type Expression interface {
 	expressionNode()
 }
 
-//Program is a collection of numerous statements
+//Program is a collection of numerous statements, also the root node for ast.
+//Every valid program is a series of statements which are contained in the statements slice.
 type Program struct {
 	Statements []Statement
 }

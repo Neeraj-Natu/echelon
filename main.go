@@ -14,6 +14,6 @@ func main() {
 	}
 	fmt.Printf("Hello %s! This is the Shifu programming language!\n",
 		user.Username)
-	fmt.Printf("Attain inner peace by typing commands\n")
+	fmt.Printf("Attain inner peace by typing in the commands\n")
 	repl.Start(os.Stdin, os.Stdout)
 }

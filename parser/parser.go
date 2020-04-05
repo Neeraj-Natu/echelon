@@ -26,6 +26,7 @@ type Parser struct {
 	peekToken token.Token
 }
 
+//This function creates an instance of the parser and initializes it.
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{l:l}
 	
