@@ -46,6 +46,16 @@ type LetStatement struct {
 func (ls *LetStatement) statementNode()       {}
 func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal }
 
+// Any return statement has just 2 parts (return <expression>) the return keyword and an expression.
+type ReturnStatement struct {
+	Token token.Token // the return token
+	ReturnValue Expression
+}
+
+func (rs *ReturnStatement) statementNode()       {}
+func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
+
+
 // This is to hold the variable in the let statement. This implements the expression interface.
 type Variable struct {
 	Token token.Token // the token.VARIABLE token
