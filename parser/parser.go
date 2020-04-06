@@ -108,7 +108,7 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 }
 
 func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
-	stmt := &ast.ReturnStatement{Token: p.curToken}
+	stmt := &ast.ReturnStatement{Token: p.curToken} 
 	p.nextToken()
 
 	// TODO: skipping expressions untill we encounter a semicolon
