@@ -37,7 +37,11 @@ This is a personal project intended to write my own interpreter in go lang.
 - This is the second stage to understanding/interpreting the input.
 - The type of Parser we use here is Recursive Descent Parser that works from top down.
 - This is also called top down operator precedence parser or a Pratt Parser.
+- The main idea behind pratt parser is to associate parsing functions with token types, whenever a token type is encountered the appropriate parsing function is called which returns an AST node that represents the expression.
+- Each token type can have upto two parsing functions associated with it, depending on whether the otken is found in a prefix position or infix position.
 - The parser here won't be fastest or have a formal proof of its correctness and its error recovey process and detection of errorneous syntax won't be always right as it's just the begining for me.
+- Supports prefix and infix operators. work for supporting postfix operators in progress.
+- Supports let statements, return statements and expressions.
 
 #### *Ast*:
 

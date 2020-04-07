@@ -88,6 +88,11 @@ func (p *Parser) peekError(t token.TokenType) {
 	p.errors = append(p.errors, msg)
 }
 
+type (
+	prefixParseFn func() ast.Expression
+	infixParseFn func(ast.Expression) ast.Expression
+)
+
 func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmnt := &ast.LetStatement{Token: p.curToken}
 
