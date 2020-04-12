@@ -1,4 +1,8 @@
 # shifu
+
+<p align="right">
+![Go](https://github.com/Neeraj-Natu/shifu/workflows/Go/badge.svg)
+</p>
 <p align="center">
 <img width="360" height="360" src="imgs/shifu.jpg">
 </p>

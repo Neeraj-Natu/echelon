@@ -111,7 +111,7 @@ func (es *ExpressionStatement) String() string {
 	return ""
 }
 
-// This is to hold the variable in the let statement. This implements the expression interface so it's and expression Node.
+// This is to hold the variable in the let statement. This implements the expression interface so it's an expression Node.
 type Variable struct {
 	Token token.Token // the token.VARIABLE token
 	Value string
@@ -120,3 +120,13 @@ type Variable struct {
 func (v *Variable) expressionNode()      {}
 func (v *Variable) TokenLiteral() string { return v.Token.Literal }
 func (v *Variable) String() string {return v.Value}
+
+// This is to hold the integers in the expression statement. this implements the expression interface so it's also an expression node.
+type IntegerLiteral struct {
+	Token token.Token
+	Value int64
+}
+
+func (il *IntegerLiteral) expressionNode()      {}
+func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
+func (il *IntegerLiteral) String() string       { return il.Token.Literal }
