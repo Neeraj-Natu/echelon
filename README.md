@@ -1,5 +1,5 @@
 # shifu
-![Go](https://github.com/Neeraj-Natu/shifu/workflows/Go/badge.svg)
+![build-test](https://github.com/Neeraj-Natu/shifu/workflows/build-test/badge.svg)
 
 <p align="center">
 <img width="360" height="360" src="imgs/shifu.jpg">
