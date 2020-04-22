@@ -101,9 +101,7 @@ func TestAdvancedToken(t *testing.T) {
 
 	for i, tt := range tests {
 		tok := l.NextToken()
-		t.Log("token to be tested")
-		t.Log(tok.Literal)
-		t.Log(tok.Type)
+		
 		if tok.Type != tt.expectedType {
 			t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q",
 				i, tt.expectedType, tok.Type)
