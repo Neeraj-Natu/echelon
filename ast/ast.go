@@ -121,7 +121,7 @@ func (v *Variable) expressionNode()      {}
 func (v *Variable) TokenLiteral() string { return v.Token.Literal }
 func (v *Variable) String() string {return v.Value}
 
-// This is to hold the integers in the expression statement. this implements the expression interface so it's also an expression node.
+// This is to hold the integers in the expression statement. this implements the expression interface so it's an expression node.
 type IntegerLiteral struct {
 	Token token.Token
 	Value int64
@@ -131,3 +131,21 @@ func (il *IntegerLiteral) expressionNode()      {}
 func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
 func (il *IntegerLiteral) String() string       { return il.Token.Literal }
 
+// This is to hold the Expressions that start with prefixes, the prefix could be '-' or '!'. this implements the expression interface so it's an expression node.
+type PrefixExpression struct {
+	Token token.Token // The prefix token eg: '!'
+	Operator string   // The string that contains the prefix '!' or '-'
+	Right Expression  // The expression to the right of the operator
+}
+
+func (pe *PrefixExpression) expressionNode()      {}
+func (pe *PrefixExpression) TokenLiteral() string { return pe.Token.Literal }
+func (pe *PrefixExpression) String() string       { 
+	var out bytes.Buffer
+
+	out.WriteString("(")
+	out.WriteString(pe.Operator)
+	out.WriteString(pe.Right.String())
+	out.WriteString(")")
+	return out.String()
+ }
