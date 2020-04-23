@@ -132,6 +132,7 @@ func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
 func (il *IntegerLiteral) String() string       { return il.Token.Literal }
 
 // This is to hold the Expressions that start with prefixes, the prefix could be '-' or '!'. this implements the expression interface so it's an expression node.
+// Any Prefix Expression has 2 parts (<prefix> <Expression>) thus is also called unary operator as it has one Expression involved.
 type PrefixExpression struct {
 	Token token.Token // The prefix token eg: '!'
 	Operator string   // The string that contains the prefix '!' or '-'
@@ -149,3 +150,26 @@ func (pe *PrefixExpression) String() string       {
 	out.WriteString(")")
 	return out.String()
  }
+
+//This is to hold the Expressions that have an Infix operator. the Infix could be any operator '+,-,*,/,>,<,!=,=='. this implements the expression interface thus is an expression node.
+// Any Infix Expression has 3 parts (<Left Expression> <Operator> <Right Expression>) thus this is called binary operator as it has two Expressions involved.
+type InfixExpression struct {
+	Token token.Token // The infix operator token, eg: '+' or '-'
+	Left Expression
+	Operator string
+	Right Expression
+}
+
+func (ie *InfixExpression) expressionNode()      {}
+func (ie *InfixExpression) TokenLiteral() string { return ie.Token.Literal }
+func (ie *InfixExpression) String() string       { 
+	var out bytes.Buffer
+
+	out.WriteString("(")
+	out.WriteString(ie.Left.String())
+	out.WriteString(ie.Operator)
+	out.WriteString(ie.Right.String())
+	out.WriteString(")")
+	return out.String()
+ }
+  
