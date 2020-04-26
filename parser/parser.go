@@ -197,6 +197,10 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 		return nil
 	}
 
+	p.nextToken()
+
+	stmnt.Value = p.parseExpression(LOWEST)
+
 	// TODO: skipping expressions untill we encounter a semicolon
 	for !p.curTokenIs(token.SEMICOLON) {
 		p.nextToken()
