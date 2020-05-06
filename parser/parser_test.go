@@ -4,6 +4,7 @@ import (
 	"testing"
 	"github.com/Neeraj-Natu/shifu/ast"
 	"github.com/Neeraj-Natu/shifu/lexer"
+	"fmt"
 )
 
 func TestLetStatements(t *testing.T) {
@@ -14,6 +15,7 @@ func TestLetStatements(t *testing.T) {
 	} {
 		{"let x = 5;","x",5},
 		{"let foobar = y;","foobar","y"},
+		{"let checkstuff = true;","checkstuff",true},
 	  }
 
 	for _, tt := range tests {
@@ -45,6 +47,7 @@ func TestReturnStatement(t *testing.T) {
 	}{
 		{"return 5;",5},
 		{"return foobar;","foobar"},
+		{"return true;",true},
 	}
 
 	for _,tt := range tests {
@@ -140,6 +143,38 @@ func TestIntegerLiteralExpression(t *testing.T) {
 	}
 }
 
+func TestBooleanExpression(t *testing.T) {
+	input := `true;`
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program := p.ParseProgram()
+	checkParseErrors(t,p)
+
+	if program == nil {
+		t.Fatalf("ParseProgram() returned nil")
+	}
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements doesnot contain one statement. got=%d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not *ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	boolean, ok := stmt.Expression.(*ast.Boolean)
+	if !ok {
+		t.Fatalf("exp not *ast.Boolean. got=%T", stmt.Expression)
+	}
+
+	if !boolean.Value {
+		t.Errorf("boolean.Value not %v. got=%v",true,boolean.Value)
+	}
+}
+
 func TestParsingPrefixExpressions(t *testing.T) {
 	prefixTests := []struct {
 		input        string
@@ -149,6 +184,8 @@ func TestParsingPrefixExpressions(t *testing.T) {
 		{"!5","!",5},
 		{"-15","-",15},
 		{"!foobar","!","foobar"},
+		{"!true","!",true},
+		{"!false","!",false},
 	}
 	for _,tt := range prefixTests {
 		l:= lexer.New(tt.input)
@@ -181,9 +218,9 @@ func TestParsingPrefixExpressions(t *testing.T) {
 func TestParsingInfixExpressions(t *testing.T) {
 	infixTests := []struct {
 		input        string
-		leftValue	 int64
+		leftValue	 interface{}
 		operator	 string
-		rightValue 	 int64
+		rightValue 	 interface{}
 	}{
 		{"5 + 10;",5,"+",10},
 		{"15 - 5",15,"-",5},
@@ -193,7 +230,18 @@ func TestParsingInfixExpressions(t *testing.T) {
 		{"25 > 23",25,">",23},
 		{"25 < 23",25,"<",23},
 		{"334 == 3",334,"==",3},
-		{"231 != 23",231,"!=",23}, 
+		{"231 != 23",231,"!=",23},
+		{"foobar + barfoo;", "foobar", "+", "barfoo"},
+		{"foobar - barfoo;", "foobar", "-", "barfoo"},
+		{"foobar * barfoo;", "foobar", "*", "barfoo"},
+		{"foobar / barfoo;", "foobar", "/", "barfoo"},
+		{"foobar > barfoo;", "foobar", ">", "barfoo"},
+		{"foobar < barfoo;", "foobar", "<", "barfoo"},
+		{"foobar == barfoo;", "foobar", "==", "barfoo"},
+		{"foobar != barfoo;", "foobar", "!=", "barfoo"},
+		{"true == true", true, "==", true},
+		{"true != false", true, "!=", false},
+		{"false == false", false, "==", false},
 	}
 	for _,tt := range infixTests{
 		l := lexer.New(tt.input)
@@ -357,6 +405,25 @@ func testVariable(t *testing.T, exp ast.Expression, value string) bool {
 	return true
 }
 
+func testBooleanLiteral(t *testing.T, exp ast.Expression, value bool) bool {
+	bo, ok := exp.(*ast.Boolean)
+	if !ok {
+		t.Errorf("exp is not *ast.Boolean. got=%T.", exp)
+		return false
+	}
+
+	if bo.Value != value {
+		t.Errorf("bo.Value not %t. got=%t", value, bo.Value)
+		return false
+	}
+
+	if bo.TokenLiteral() != fmt.Sprintf("%t", value) {
+		t.Errorf("bo.TokenLiteral not %t. got=%s",value,bo.TokenLiteral())
+		return false
+	}
+	return true
+}
+
 func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{}) bool {
 	switch v := expected.(type){
 	case int:
@@ -365,6 +432,8 @@ func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{
 		return testIntegerLiteral(t, exp, v)	
 	case string:
 		return testVariable(t,exp,v)	
+	case bool:
+		return testBooleanLiteral(t, exp,v)	
 	}
 	t.Errorf("type of exp not handled. got=%T.",exp)
 	return false
