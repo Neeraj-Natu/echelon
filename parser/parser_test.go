@@ -353,7 +353,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 	}
 }
 
-func TestIfExpression(t *testing.T) {
+func TestIfExpressionParsing(t *testing.T) {
 	input := `if (x < y) { x }`
 	l := lexer.New(input)
 	p := New(l)
@@ -396,7 +396,7 @@ func TestIfExpression(t *testing.T) {
 	}
 }
 
-func TestIfElseExpression(t *testing.T) {
+func TestIfElseExpressionParsing(t *testing.T) {
 	input := `if (x < y) { x } else { y }`
 	l := lexer.New(input)
 	p := New(l)
@@ -442,6 +442,78 @@ func TestIfElseExpression(t *testing.T) {
 	if !testVariable(t, alernative.Expression, "y") {
 		return
 	}
+}
+
+func TestFunctionLiteralParsing(t *testing.T) {
+	input := `func(x,y) { x + y;}`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParseErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements does not contain %d statements. got=%d /n", 1, len(program.Statements))
+	}
+
+	stmnt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statement[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	function, ok := stmnt.Expression.(*ast.FunctionLiteral)
+	if !ok {
+		t.Fatalf("stmnt.Expression is not ast.FunctionLiteral. got=%T", stmnt.Expression)
+	}
+
+	if len(function.Parameters) != 2 {
+		t.Fatalf("function Literal parameters are wrong. wanted 2, got=%d\n", len(function.Parameters))
+	}
+
+	testLiteralExpression(t, function.Parameters[0], "x")
+	testLiteralExpression(t, function.Parameters[1], "y")
+
+	if len(function.Body.Statements) != 1 {
+		t.Fatalf("function.Body.Statements doesnot have 1 statement. got=%d\n", len(function.Body.Statements))
+	}
+
+	bodyStmnt, ok := function.Body.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("function body stmnt is not ast.ExpressionStatement. got=%T", function.Body.Statements[0])
+	}
+
+	testInfixExpression(t, bodyStmnt.Expression, "x", "+", "y")
+}
+
+func TestFunctionParameterParsing(t *testing.T) {
+	tests := []struct {
+		input          string
+		expectedParams []string
+	}{
+		{input: "func() {};", expectedParams: []string{}},
+		{input: "func(x) {};", expectedParams: []string{"x"}},
+		{input: "func(x,y,z) {};", expectedParams: []string{"x", "y", "z"}},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParseErrors(t, p)
+
+		stmnt := program.Statements[0].(*ast.ExpressionStatement)
+		function := stmnt.Expression.(*ast.FunctionLiteral)
+
+		if len(function.Parameters) != len(tt.expectedParams) {
+			t.Errorf("length of parameters is wrong. wanted %d, got=%d\n", len(tt.expectedParams), len(function.Parameters))
+		}
+
+		for i, variable := range tt.expectedParams {
+			testLiteralExpression(t, function.Parameters[i], variable)
+		}
+	}
+
 }
 
 // All helper functions

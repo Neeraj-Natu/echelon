@@ -2,8 +2,8 @@ package ast
 
 import (
 	"bytes"
-
 	"github.com/Neeraj-Natu/shifu/token"
+	"strings"
 )
 
 // The base Node interface
@@ -222,5 +222,32 @@ func (ie *IfExpression) String() string {
 		out.WriteString("else ")
 		out.WriteString(ie.Alternative.String())
 	}
+	return out.String()
+}
+
+//FunctionLiteral is to hold all the functions in the language. Every function can be represented as 'func <parameters> <block statement>'.
+//Functions are firstclass citizens here which means these can be used as expression so shouldn't be a surprise when functionLiteral implements the expressionNode
+type FunctionLiteral struct {
+	Token      token.Token // The 'func' token
+	Parameters []*Variable
+	Body       *BlockStatement
+}
+
+func (fl *FunctionLiteral) expressionNode()      {}
+func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
+func (fl *FunctionLiteral) String() string {
+	var out bytes.Buffer
+
+	params := []string{}
+	for _, p := range fl.Parameters {
+		params = append(params, p.String())
+	}
+
+	out.WriteString(fl.TokenLiteral())
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ","))
+	out.WriteString(")")
+	out.WriteString(fl.Body.String())
+
 	return out.String()
 }

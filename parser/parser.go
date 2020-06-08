@@ -94,6 +94,7 @@ func New(l *lexer.Lexer) *Parser {
 
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseIfExpression)
+	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 
 	// Read two tokens, so curToken and peekToken are both set
 	p.nextToken()
@@ -388,4 +389,46 @@ func (p *Parser) parseBlockStatement() *ast.BlockStatement {
 		p.nextToken()
 	}
 	return block
+}
+
+//This is the parsing function for Function Literals.
+func (p *Parser) parseFunctionLiteral() ast.Expression {
+	lit := &ast.FunctionLiteral{Token: p.curToken}
+
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	lit.Parameters = p.parseFunctionParameters()
+
+	if !p.expectPeek(token.LCBRACE) {
+		return nil
+	}
+	lit.Body = p.parseBlockStatement()
+	return lit
+}
+
+func (p *Parser) parseFunctionParameters() []*ast.Variable {
+	variables := []*ast.Variable{}
+
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return variables
+	}
+	p.nextToken()
+
+	variable := &ast.Variable{Token: p.curToken, Value: p.curToken.Literal}
+	variables = append(variables, variable)
+
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		variable := &ast.Variable{Token: p.curToken, Value: p.curToken.Literal}
+		variables = append(variables, variable)
+	}
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+	return variables
 }
