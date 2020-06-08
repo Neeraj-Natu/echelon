@@ -2,10 +2,11 @@ package parser
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/Neeraj-Natu/shifu/ast"
 	"github.com/Neeraj-Natu/shifu/lexer"
 	"github.com/Neeraj-Natu/shifu/token"
-	"strconv"
 )
 
 /*
@@ -78,20 +79,21 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
 	p.registerPrefix(token.BANG, p.parsePrefixExpression)
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
-	p.registerPrefix(token.TRUE,p.parseBoolean)
-	p.registerPrefix(token.FALSE,p.parseBoolean)
+	p.registerPrefix(token.TRUE, p.parseBoolean)
+	p.registerPrefix(token.FALSE, p.parseBoolean)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
-	p.registerInfix(token.PLUS,p.parseInfixExpression)
-	p.registerInfix(token.MINUS,p.parseInfixExpression)
-	p.registerInfix(token.SLASH,p.parseInfixExpression)
-	p.registerInfix(token.ASTERISK,p.parseInfixExpression)
-	p.registerInfix(token.EQ,p.parseInfixExpression)
-	p.registerInfix(token.NOT_EQ,p.parseInfixExpression)
-	p.registerInfix(token.GT,p.parseInfixExpression)
-	p.registerInfix(token.LT,p.parseInfixExpression)
+	p.registerInfix(token.PLUS, p.parseInfixExpression)
+	p.registerInfix(token.MINUS, p.parseInfixExpression)
+	p.registerInfix(token.SLASH, p.parseInfixExpression)
+	p.registerInfix(token.ASTERISK, p.parseInfixExpression)
+	p.registerInfix(token.EQ, p.parseInfixExpression)
+	p.registerInfix(token.NOT_EQ, p.parseInfixExpression)
+	p.registerInfix(token.GT, p.parseInfixExpression)
+	p.registerInfix(token.LT, p.parseInfixExpression)
 
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
+	p.registerPrefix(token.IF, p.parseIfExpression)
 
 	// Read two tokens, so curToken and peekToken are both set
 	p.nextToken()
@@ -106,7 +108,6 @@ func (p *Parser) nextToken() {
 	p.peekToken = p.l.NextToken()
 }
 
-
 // This function returns if there were any errors during parsing
 func (p *Parser) Errors() []string {
 	return p.errors
@@ -118,16 +119,17 @@ func (p *Parser) peekError(t token.TokenType) {
 	p.errors = append(p.errors, msg)
 }
 
-
 func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 	msg := fmt.Sprintf("no prefix parse function for %s found", t)
 	p.errors = append(p.errors, msg)
 }
 
+// Check for current token but donot advance to the next Token
 func (p *Parser) curTokenIs(t token.TokenType) bool {
 	return p.curToken.Type == t
 }
 
+// Check for nextToken but donot advance to the next Token
 func (p *Parser) peekTokenIs(t token.TokenType) bool {
 	return p.peekToken.Type == t
 }
@@ -258,7 +260,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 }
 
 // Helper function to peek the precedence of next token
-func (p *Parser) peekPrecedence() int{
+func (p *Parser) peekPrecedence() int {
 	if p, ok := precedences[p.peekToken.Type]; ok {
 		return p
 	}
@@ -266,8 +268,8 @@ func (p *Parser) peekPrecedence() int{
 }
 
 // Helper function to get the precedence of current token
-func (p *Parser) curPrecedence() int{
-	if p,ok := precedences[p.curToken.Type]; ok {
+func (p *Parser) curPrecedence() int {
+	if p, ok := precedences[p.curToken.Type]; ok {
 		return p
 	}
 	return LOWEST
@@ -297,9 +299,10 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 	return lit
 }
 
+// Parsing function for Prefix Expressions
 func (p *Parser) parsePrefixExpression() ast.Expression {
 	expression := &ast.PrefixExpression{
-		Token: p.curToken,
+		Token:    p.curToken,
 		Operator: p.curToken.Literal,
 	}
 	p.nextToken()
@@ -308,11 +311,12 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
 	return expression
 }
 
+// Parsing function for Infix Expressions
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	expression := &ast.InfixExpression{
-		Token: p.curToken,
+		Token:    p.curToken,
 		Operator: p.curToken.Literal,
-		Left: left,
+		Left:     left,
 	}
 
 	precedence := p.curPrecedence()
@@ -321,13 +325,67 @@ func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	return expression
 }
 
+// Parsing function for Grouped Expressions
 func (p *Parser) parseGroupedExpression() ast.Expression {
 	p.nextToken()
 
 	exp := p.parseExpression(LOWEST)
 
-	if !p.expectPeek(token.RPAREN){
+	if !p.expectPeek(token.RPAREN) {
 		return nil
 	}
 	return exp
+}
+
+//Parsing function for IF Expressions
+func (p *Parser) parseIfExpression() ast.Expression {
+
+	expression := &ast.IfExpression{Token: p.curToken}
+
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	p.nextToken()
+
+	expression.Condition = p.parseExpression(LOWEST)
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	if !p.expectPeek(token.LCBRACE) {
+		return nil
+	}
+
+	expression.Consequence = p.parseBlockStatement()
+
+	if p.peekTokenIs(token.ELSE) {
+		p.nextToken()
+
+		if !p.expectPeek(token.LCBRACE) {
+			return nil
+		}
+
+		expression.Alternative = p.parseBlockStatement()
+	}
+
+	return expression
+}
+
+// This is the parsing function for block statements. A Block statement is a list of statements contained within {}.
+func (p *Parser) parseBlockStatement() *ast.BlockStatement {
+	block := &ast.BlockStatement{Token: p.curToken}
+	block.Statements = []ast.Statement{}
+
+	p.nextToken()
+
+	for !p.curTokenIs(token.RCBRACE) && !p.curTokenIs(token.EOF) {
+		stmnt := p.parseStatement()
+		if stmnt != nil {
+			block.Statements = append(block.Statements, stmnt)
+		}
+		p.nextToken()
+	}
+	return block
 }

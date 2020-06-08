@@ -1,8 +1,9 @@
 package ast
 
 import (
-	"github.com/Neeraj-Natu/shifu/token"
 	"bytes"
+
+	"github.com/Neeraj-Natu/shifu/token"
 )
 
 // The base Node interface
@@ -46,14 +47,14 @@ func (p *Program) TokenLiteral() string {
 func (p *Program) String() string {
 	var out bytes.Buffer
 
-	for _,s := range p.Statements {
+	for _, s := range p.Statements {
 		out.WriteString(s.String())
 	}
 	return out.String()
 }
 
 // Any let statement has 3 parts first the token LET, second the variable name and third the expression that it points to on the right side of equals sign.
-// Implements statement interface 
+// Implements statement interface
 type LetStatement struct {
 	Token token.Token // the token.LET token
 	Name  *Variable
@@ -78,7 +79,7 @@ func (ls *LetStatement) String() string {
 
 // Any return statement has just 2 parts (return <expression>) the return keyword and an expression.
 type ReturnStatement struct {
-	Token token.Token // the return token
+	Token       token.Token // the return token
 	ReturnValue Expression
 }
 
@@ -96,9 +97,25 @@ func (rs *ReturnStatement) String() string {
 	return out.String()
 }
 
+//BlockStatement is a series of Statements that are within curly braces.
+type BlockStatement struct {
+	Token      token.Token // the { token
+	Statements []Statement
+}
+
+func (bs *BlockStatement) statementNode()       {}
+func (bs *BlockStatement) TokenLiteral() string { return bs.Token.Literal }
+func (bs *BlockStatement) String() string {
+	var out bytes.Buffer
+	for _, s := range bs.Statements {
+		out.WriteString(s.String())
+	}
+	return out.String()
+}
+
 // The token field what every statement has and the actual expression field that holds the entire expression.
 type ExpressionStatement struct {
-	Token token.Token  // the first token of the expression
+	Token      token.Token // the first token of the expression
 	Expression Expression
 }
 
@@ -119,7 +136,7 @@ type Variable struct {
 
 func (v *Variable) expressionNode()      {}
 func (v *Variable) TokenLiteral() string { return v.Token.Literal }
-func (v *Variable) String() string {return v.Value}
+func (v *Variable) String() string       { return v.Value }
 
 // This is to hold the integers in the expression statement. this implements the expression interface so it's an expression node.
 type IntegerLiteral struct {
@@ -134,14 +151,14 @@ func (il *IntegerLiteral) String() string       { return il.Token.Literal }
 // This is to hold the Expressions that start with prefixes, the prefix could be '-' or '!'. this implements the expression interface so it's an expression node.
 // Any Prefix Expression has 2 parts (<prefix> <Expression>) thus is also called unary operator as it has one Expression involved.
 type PrefixExpression struct {
-	Token token.Token // The prefix token eg: '!'
-	Operator string   // The string that contains the prefix '!' or '-'
-	Right Expression  // The expression to the right of the operator
+	Token    token.Token // The prefix token eg: '!'
+	Operator string      // The string that contains the prefix '!' or '-'
+	Right    Expression  // The expression to the right of the operator
 }
 
 func (pe *PrefixExpression) expressionNode()      {}
 func (pe *PrefixExpression) TokenLiteral() string { return pe.Token.Literal }
-func (pe *PrefixExpression) String() string       { 
+func (pe *PrefixExpression) String() string {
 	var out bytes.Buffer
 
 	out.WriteString("(")
@@ -149,35 +166,61 @@ func (pe *PrefixExpression) String() string       {
 	out.WriteString(pe.Right.String())
 	out.WriteString(")")
 	return out.String()
- }
+}
 
 //This is to hold the Expressions that have an Infix operator. the Infix could be any operator '+,-,*,/,>,<,!=,=='. this implements the expression interface thus is an expression node.
 // Any Infix Expression has 3 parts (<Left Expression> <Operator> <Right Expression>) thus this is called binary operator as it has two Expressions involved.
 type InfixExpression struct {
-	Token token.Token // The infix operator token, eg: '+' or '-'
-	Left Expression
+	Token    token.Token // The infix operator token, eg: '+' or '-'
+	Left     Expression
 	Operator string
-	Right Expression
+	Right    Expression
 }
 
 func (ie *InfixExpression) expressionNode()      {}
 func (ie *InfixExpression) TokenLiteral() string { return ie.Token.Literal }
-func (ie *InfixExpression) String() string       { 
+func (ie *InfixExpression) String() string {
 	var out bytes.Buffer
 
 	out.WriteString("(")
 	out.WriteString(ie.Left.String())
-	out.WriteString(" " + ie.Operator+ " ")
+	out.WriteString(" " + ie.Operator + " ")
 	out.WriteString(ie.Right.String())
 	out.WriteString(")")
 	return out.String()
- }
+}
 
- type Boolean struct {
-	 Token token.Token
-	 Value bool
- }
-  
- func (b *Boolean) expressionNode()      {}
- func (b *Boolean) TokenLiteral() string { return b.Token.Literal }
- func (b *Boolean) String() string       { return b.Token.Literal }
+type Boolean struct {
+	Token token.Token
+	Value bool
+}
+
+func (b *Boolean) expressionNode()      {}
+func (b *Boolean) TokenLiteral() string { return b.Token.Literal }
+func (b *Boolean) String() string       { return b.Token.Literal }
+
+// This is to hold the if else statement structure. Every such if statement has following format: (if (<Condition>) <Consequence> else <Alternative>).
+// The below strct is to store such expressions.
+type IfExpression struct {
+	Token       token.Token // The 'if' token
+	Condition   Expression
+	Consequence *BlockStatement
+	Alternative *BlockStatement
+}
+
+func (ie *IfExpression) expressionNode()      {}
+func (ie *IfExpression) TokenLiteral() string { return ie.Token.Literal }
+func (ie *IfExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("if")
+	out.WriteString(ie.Condition.String())
+	out.WriteString(" ")
+	out.WriteString(ie.Consequence.String())
+
+	if ie.Alternative != nil {
+		out.WriteString("else ")
+		out.WriteString(ie.Alternative.String())
+	}
+	return out.String()
+}
