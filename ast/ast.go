@@ -2,8 +2,9 @@ package ast
 
 import (
 	"bytes"
-	"github.com/Neeraj-Natu/shifu/token"
 	"strings"
+
+	"github.com/Neeraj-Natu/shifu/token"
 )
 
 // The base Node interface
@@ -248,6 +249,32 @@ func (fl *FunctionLiteral) String() string {
 	out.WriteString(strings.Join(params, ","))
 	out.WriteString(")")
 	out.WriteString(fl.Body.String())
+
+	return out.String()
+}
+
+//CallExpression is to hold the calling of functions. Anytime a function is bound to a variable and called it has 2 things,
+//The Expression that results in a function when evaluated and a list of expressions that are argument to this funcion call.
+type CallExpression struct {
+	Token     token.Token // the '(' token
+	Function  Expression  // Variable or Function Literal
+	Arguments []Expression
+}
+
+func (ce *CallExpression) expressionNode()      {}
+func (ce *CallExpression) TokenLiteral() string { return ce.Token.Literal }
+func (ce *CallExpression) String() string {
+	var out bytes.Buffer
+
+	args := []string{}
+	for _, a := range ce.Arguments {
+		args = append(args, a.String())
+	}
+
+	out.WriteString(ce.Function.String())
+	out.WriteString("(")
+	out.WriteString(strings.Join(args, ", "))
+	out.WriteString(")")
 
 	return out.String()
 }
