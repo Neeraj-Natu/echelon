@@ -51,6 +51,21 @@ func TestEvalBooleanExpression(t *testing.T) {
 		{"1 != 1", false},
 		{"1 == 2", false},
 		{"1 != 2 ", true},
+		{"true == true", true},
+		{"false == false", true},
+		{"true == false", false},
+		{"true != false", true},
+		{"false != true", true},
+		{"(1 < 2) == true", true},
+		{"(1 < 2) == false", false},
+		{"(1 > 2) == true", false},
+		{"(1 > 2) == false", true},
+		{"true && true", true},
+		{"true || false", true},
+		{"true && false", false},
+		{"false || false", false},
+		{"(1 + 3 == 4) || (2 * 5 < 6)", true},
+		{"((23 + 46 * 7) > 8) && ((43 - 435) > 324)", false},
 	}
 
 	for _, tt := range tests {
@@ -83,7 +98,6 @@ func testEval(input string) object.Object {
 	l := lexer.New(input)
 	p := parser.New(l)
 	program := p.ParseProgram()
-
 	return Eval(program)
 }
 
