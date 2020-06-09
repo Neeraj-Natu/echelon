@@ -31,6 +31,10 @@ func Eval(node ast.Node) object.Object {
 		left := Eval(node.Left)
 		right := Eval(node.Right)
 		return evalInfixExpression(node.Operator, left, right)
+	case *ast.BlockStatement:
+		return evalStatements(node.Statements)
+	case *ast.IfExpression:
+		return evalIfExpression(node)
 	}
 	return nil
 }
@@ -44,6 +48,7 @@ func evalStatements(stmnts []ast.Statement) object.Object {
 	return result
 }
 
+// This function's purpose is to convert the native bool to our Boolean Object
 func nativeBoolToBooleanObject(input bool) *object.Boolean {
 	if input {
 		return TRUE
@@ -51,6 +56,7 @@ func nativeBoolToBooleanObject(input bool) *object.Boolean {
 	return FALSE
 }
 
+//There are just two different prefixes supported in Shifu language helper for them follow this function.
 func evalPrefixExpression(operator string, right object.Object) object.Object {
 	switch operator {
 	case "!":
@@ -84,6 +90,10 @@ func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 	return &object.Integer{Value: -value}
 }
 
+//This function evaluates the infix Expressions it uses pointer comparision for most checks apart from Integer
+//As while evaluating Integers we assign new Objects and hence new memory addresses to them
+//Comparing different memory addresses won't work thus they need their own helper function to compare the
+//values extracted from them.
 func evalInfixExpression(operator string, left, right object.Object) object.Object {
 	switch {
 	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
@@ -124,5 +134,33 @@ func evalIntegerInfixExpression(operator string, left, right object.Object) obje
 		return nativeBoolToBooleanObject(leftVal != rightVal)
 	default:
 		return NULL
+	}
+}
+
+//Here we decided the if condition should evaluate to TRUE anytime when the condition is not false or null.
+//Instead of being explicity TRUE. Also incase the condition doesn't evaluate to a value it's supposed to return NULL.
+//These are language design decisions governed by 'isTruthy' function.
+func evalIfExpression(ie *ast.IfExpression) object.Object {
+	condition := Eval(ie.Condition)
+
+	if isTruthy(condition) {
+		return Eval(ie.Consequence)
+	} else if ie.Alternative != nil {
+		return Eval(ie.Alternative)
+	} else {
+		return NULL
+	}
+}
+
+func isTruthy(obj object.Object) bool {
+	switch obj {
+	case NULL:
+		return false
+	case TRUE:
+		return true
+	case FALSE:
+		return false
+	default:
+		return TRUE
 	}
 }
