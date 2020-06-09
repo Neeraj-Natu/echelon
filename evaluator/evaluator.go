@@ -16,7 +16,7 @@ func Eval(node ast.Node) object.Object {
 	switch node := node.(type) {
 	//Evaluating Statements
 	case *ast.Program:
-		return evalStatements(node.Statements)
+		return evalProgram(node)
 	//Recursively evaluating each expression
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression)
@@ -32,18 +32,45 @@ func Eval(node ast.Node) object.Object {
 		right := Eval(node.Right)
 		return evalInfixExpression(node.Operator, left, right)
 	case *ast.BlockStatement:
-		return evalStatements(node.Statements)
+		return evalBlockStatements(node)
 	case *ast.IfExpression:
 		return evalIfExpression(node)
+	case *ast.ReturnStatement:
+		val := Eval(node.ReturnValue)
+		return &object.ReturnValue{Value: val}
 	}
 	return nil
 }
 
-func evalStatements(stmnts []ast.Statement) object.Object {
+//While evaluating statements if evaluator encounter an Object
+//of type ReturnValue then stop the further evaluation and return
+//the object wrapped by the ReturnValue object.
+//else carry on evaluation till all the statements are evaluated.
+func evalProgram(program *ast.Program) object.Object {
 	var result object.Object
 
-	for _, statement := range stmnts {
+	for _, statement := range program.Statements {
 		result = Eval(statement)
+		if returnValue, ok := result.(*object.ReturnValue); ok {
+			return returnValue.Value
+		}
+	}
+	return result
+}
+
+//This needs to be different than evalProgram as here we can encounter nested block statements.
+//Here we cannot unwrap the return value we need to return the ReturnValue object as is to the
+//outerloops in the block statement and only let the most outer loop decide (where result is still nil)
+//which is the first occurence of the ReturnValue object for that loop and only return that.
+func evalBlockStatements(block *ast.BlockStatement) object.Object {
+	var result object.Object
+
+	for _, statement := range block.Statements {
+		result = Eval(statement)
+
+		if result != nil && result.Type() == object.RETURN_VALUE_OBJ {
+			return result
+		}
 	}
 	return result
 }
