@@ -16,7 +16,9 @@ This is a personal project intended to write my own interpreter in go lang.
 ### *Language Featuers*:
 
 - Dynamically typed
-- Supports most of the control statements
+- Supports higher order functions
+- Supports closures
+- Supports integer arithmetic
 - Supports strings and integers
 - Functions are first class citizens
 - Completely written in golang
