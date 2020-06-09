@@ -45,6 +45,17 @@ This is a personal project intended to write my own interpreter in go lang.
 - Supports prefix and infix operators. work for supporting postfix operators in progress.
 - Supports let statements, return statements and expressions.
 
+#### *Evaluator*:
+
+- Evaluator/Interpreter is the part of the language that takes the parsed code from the parser as an input and then executes it.
+- This gives the meaning to the language and makes it come to life.
+- This is the final stage to understand/interpret the input.
+- There are several different ways to build an Interpreter, some of them listed in terms of increasing complexity and performance:
+  - Tree Walking interpreter that interprets the AST on the fly. (The one implemented here.)
+  - Compiling the AST to an Intermediate byteCode that is compact and then use a virtual machine (something like JVM) to interpret this byteCode.
+  - Convert the byteCode compiled in the above step to highly optimized machine code right before interpreting that machine code. This is also called JIT or Just In Time Interpreter. Although here would need to support different machine architectures.
+  - Others skip the conversion to byteCode and directly convert the AST to machine code and then interpret it.
+
 #### *Ast*:
 
 - AST also known as Abstract Syntax Tree is a datastructure that is used to store the langugage tokens to make sense.
@@ -56,3 +67,7 @@ This is a personal project intended to write my own interpreter in go lang.
 - Reads the input, evaluates the input, prints the output and loops again.
 - This is a standard in many languages such as Python and Javascript that comes with inbuilt REPL.
 - Usually REPL starts with a prompt ">>" thus in shifu the repl starts with the same.
+
+---
+
+The work here is from working through a great book written by Thorsten Ball. The Book name is : [Writing an Interpreter in GO](https://interpreterbook.com/).

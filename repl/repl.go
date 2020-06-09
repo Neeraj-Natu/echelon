@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/Neeraj-Natu/shifu/evaluator"
 	"github.com/Neeraj-Natu/shifu/lexer"
 	"github.com/Neeraj-Natu/shifu/parser"
 )
@@ -13,10 +14,12 @@ import (
 read from the input source until encountering a newline,
 take the just read line and pass it to an instance of our
 lexer and that to our Parser once the parser is done with
-it's job we print out the errors or the Parsed program by
-calling String() method on Program that recursively calls
-the String() method on all of the statements belonging to
-that program.
+it's job. we pass the AST into the evaluator which evaluates
+the whole program represented by the AST. After all this
+we print out the parsing errors if any or the evaluation
+result calling Inspect() method on Program that recursively
+calls the Inspect() method on all of the statements belonging
+to that program.
 */
 
 const PROMPT = ">> "
@@ -39,9 +42,11 @@ func Start(in io.Reader, out io.Writer) {
 			printParserErrors(out, p.Errors())
 			continue
 		}
-
-		io.WriteString(out, program.String())
-		io.WriteString(out, "\n")
+		evaluated := evaluator.Eval(program)
+		if evaluated != nil {
+			io.WriteString(out, evaluated.Inspect())
+			io.WriteString(out, "\n")
+		}
 	}
 }
 
