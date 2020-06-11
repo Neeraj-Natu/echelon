@@ -71,5 +71,6 @@ This is a personal project intended to write my own interpreter in go lang.
 - Usually REPL starts with a prompt ">>" thus in shifu the repl starts with the same.
 
 ---
+Credits:
 
-The work here is from working through a great book written by Thorsten Ball. The Book name is : [Writing an Interpreter in GO](https://interpreterbook.com/).
+For this project I have been following through a great book written by [Thorsten Ball](https://thorstenball.com/). The Book name is : [Writing an Interpreter in GO](https://interpreterbook.com/).
