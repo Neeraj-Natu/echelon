@@ -58,8 +58,9 @@ func Eval(node ast.Node) object.Object {
 
 //While evaluating statements if evaluator encounter an Object
 //of type ReturnValue then stop the further evaluation and return
-//the object wrapped by the ReturnValue object.
+//the object wrapped by the ReturnValue object and stop evaluation.
 //else carry on evaluation till all the statements are evaluated.
+//If encountered Error just return the error and stop evaluation.
 func evalProgram(program *ast.Program) object.Object {
 	var result object.Object
 
@@ -79,6 +80,7 @@ func evalProgram(program *ast.Program) object.Object {
 //Here we cannot unwrap the return value we need to return the ReturnValue object as is to the
 //outerloops in the block statement and only let the most outer loop decide (where result is still nil)
 //which is the first occurence of the ReturnValue object for that loop and only return that.
+//Same for Errors. To stop the errors bubbling up far away in these cases we already have isError function.
 func evalBlockStatements(block *ast.BlockStatement) object.Object {
 	var result object.Object
 
