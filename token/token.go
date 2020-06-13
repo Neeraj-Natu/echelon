@@ -60,20 +60,17 @@ const (
 )
 
 var keywords = map[string]TokenType{
-	"func":     FUNCTION,
-	"let":      LET,
-	"true":     TRUE,
-	"false":    FALSE,
-	"if":       IF,
-	"else":     ELSE,
-	"elseif":   ELSEIF,
-	"return":   RETURN,
-	"for":      FOR,
-	"in":       IN,
-	"while":    WHILE,
-	"len":      LENGTH,
-	"range":    RANGE,
-	"contains": CONTAINS,
+	"func":   FUNCTION,
+	"let":    LET,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"elseif": ELSEIF,
+	"return": RETURN,
+	"for":    FOR,
+	"while":  WHILE,
+	"range":  RANGE,
 }
 
 func LookupIdent(ident string) TokenType {

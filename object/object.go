@@ -25,6 +25,7 @@ const (
 	ERROR_OBJ        = "ERROR"
 	FUNCTION_OBJ     = "FUNCTION"
 	STRING_OBJ       = "STRING"
+	BUILTIN_OBJ      = "BUILTIN"
 )
 
 //Integer implements Object interface. Every ast.IntegerLiteral is converted to this Object.Integer
@@ -104,3 +105,14 @@ func (f *Function) Inspect() string {
 
 	return out.String()
 }
+
+//BuiltinFunction accepts zero or more object.Object as arguments and return object.Object
+type BuiltinFunction func(args ...Object) Object
+
+//Builtin defines the structure of any builtin function. It's a wrapper over all builtin functions.
+type Builtin struct {
+	Fn BuiltinFunction
+}
+
+func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
+func (b *Builtin) Inspect() string  { return "builtin function" }
