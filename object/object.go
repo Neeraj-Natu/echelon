@@ -1,6 +1,12 @@
 package object
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+	"strings"
+
+	"github.com/Neeraj-Natu/shifu/ast"
+)
 
 type ObjectType string
 
@@ -17,6 +23,7 @@ const (
 	NULL_OBJ         = "NULL"
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
 	ERROR_OBJ        = "ERROR"
+	FUNCTION_OBJ     = "FUNCTION"
 )
 
 //Integer implements Object interface. Every ast.IntegerLiteral is converted to this Object.Integer
@@ -51,9 +58,39 @@ type ReturnValue struct {
 func (rv *ReturnValue) Inspect() string  { return rv.Value.Inspect() }
 func (rv *ReturnValue) Type() ObjectType { return RETURN_VALUE_OBJ }
 
+//Error is the object that is returned when an invalid syntax is used while writing programs in language.
+//this is different from exception handling that is done within a program written in the language.
 type Error struct {
 	Message string
 }
 
 func (e *Error) Inspect() string  { return "ERROR: " + e.Message }
 func (e *Error) Type() ObjectType { return ERROR_OBJ }
+
+//Function implements the Object interface. Every ast.FunctionLiteral is converted to this Object.Function
+//while evaluating functions in the language, reference to this struct is then passed on.
+//Also any variables are all stored in the environment
+type Function struct {
+	Parameters []*ast.Variable
+	Body       *ast.BlockStatement
+	Env        *Environment
+}
+
+func (f *Function) Type() ObjectType { return FUNCTION_OBJ }
+func (f *Function) Inspect() string {
+	var out bytes.Buffer
+
+	params := []string{}
+	for _, p := range f.Parameters {
+		params = append(params, p.String())
+	}
+
+	out.WriteString("func")
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ", "))
+	out.WriteString(") {\n")
+	out.WriteString(f.Body.String())
+	out.WriteString("\n}")
+
+	return out.String()
+}
