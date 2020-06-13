@@ -19,7 +19,8 @@ This is a personal project intended to write my own interpreter in go lang.
 - Supports higher order functions
 - Supports closures
 - Supports integer arithmetic
-- Supports strings and integers
+- Supports strings, integers, arrays and maps
+- Supports builtin functions
 - Functions are first class citizens
 - Completely written in golang
 
@@ -73,4 +74,4 @@ This is a personal project intended to write my own interpreter in go lang.
 ---
 Credits:
 
-For this project I have been following through a great book written by [Thorsten Ball](https://thorstenball.com/). The Book name is : [Writing an Interpreter in GO](https://interpreterbook.com/).
+For this project I have been following through a great book written by [Thorsten Ball](https://thorstenball.com/). The Book name is : [Writing an Interpreter in GO](https://interpreterbook.com/), Also have been adding along a few changes as per my understanding.
