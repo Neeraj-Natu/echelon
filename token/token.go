@@ -14,6 +14,7 @@ const (
 	// Indentifiers and literals
 	VARIABLE = "VAR"     // add, foobar, x, y, ......
 	INT      = "INTEGER" // 123424
+	STRING   = "STRING"
 
 	// Operators
 	ASSIGN   = "="

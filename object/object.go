@@ -24,6 +24,7 @@ const (
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
 	ERROR_OBJ        = "ERROR"
 	FUNCTION_OBJ     = "FUNCTION"
+	STRING_OBJ       = "STRING"
 )
 
 //Integer implements Object interface. Every ast.IntegerLiteral is converted to this Object.Integer
@@ -43,6 +44,15 @@ type Boolean struct {
 
 func (b *Boolean) Inspect() string  { return fmt.Sprintf("%t", b.Value) }
 func (b *Boolean) Type() ObjectType { return BOOLEAN_OBJ }
+
+//String implements the Object interface. Every ast.StringLiteral is converted to this Object.String
+//while evaluating the language, the reference to this struct si then passed around.
+type String struct {
+	Value string
+}
+
+func (s *String) Inspect() string  { return s.Value }
+func (s *String) Type() ObjectType { return STRING_OBJ }
 
 //Null implements the Object interface. This represents the abscene of value.
 type Null struct{}
