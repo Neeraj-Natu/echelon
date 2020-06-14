@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/Neeraj-Natu/shifu/repl"
 	"os"
 	"os/user"
+
+	"github.com/Neeraj-Natu/shifu/repl"
 )
 
 func main() {
