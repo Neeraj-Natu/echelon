@@ -274,6 +274,23 @@ func TestFunctionApplication(t *testing.T) {
 	}
 }
 
+func TestEnclosingEnvironments(t *testing.T) {
+	input := `
+let first = 10;
+let second = 10;
+let third = 10;
+
+let ourFunction = func(first) {
+  let second = 20;
+
+  first + second + third;
+};
+
+ourFunction(20) + first + second;`
+
+	testIntegerObject(t, testEval(input), 70)
+}
+
 func TestClosures(t *testing.T) {
 	input := `
 	let newAdder = func(x){
@@ -322,6 +339,23 @@ func TestBuiltinFunctions(t *testing.T) {
 		{`len("hello world")`, 11},
 		{`len(1)`, "argument to `len` not supported, got INTEGER"},
 		{`len("one","two")`, "wrong number of arguments. got=2, expected=1"},
+		{`len([1, 2, 3])`, 3},
+		{`len([])`, 0},
+		{`first([1, 2, 3])`, 1},
+		{`first([])`, "an array has no elements!"},
+		{`first(1)`, "argument to 'first' must be an ARRAY, got INTEGER"},
+		{`last([1, 2, 3])`, 3},
+		{`last([])`, "an array has no elements!"},
+		{`last(1)`, "argument to 'last' must be an ARRAY, got INTEGER"},
+		{`push([], 1)`, []int{1}},
+		{`push(1, 1)`, "argument to 'push' must be an ARRAY, got INTEGER"},
+		{`pop([1, 2, 3], 1)`, []int{1, 3}},
+		{`pop([1, 2, 3], 2)`, []int{1, 2}},
+		{`pop(1, 1)`, "argument to 'pop' must be an ARRAY, got INTEGER"},
+		{`pop([], [])`, "second argument to 'pop' must be an INTEGER, got ARRAY"},
+		{`pop([1, 2, 3], -1)`, "Index to pop from is out of bounds!"},
+		{`pop([1, 2, 3], 3)`, "Index to pop from is out of bounds!"},
+		{`pop([1, 2, 3], 6)`, "Index to pop from is out of bounds!"},
 	}
 
 	for _, tt := range tests {
