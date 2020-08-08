@@ -13,8 +13,25 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Hello %s! This is the Shifu programming language!\n",
+	fmt.Printf(SHIFU)
+	fmt.Printf("Hello %s! \n",
 		user.Username)
-	fmt.Printf("Attain inner peace by typing in the commands\n")
+	fmt.Printf("Attain inner peace by typing in the commands!! \n")
 	repl.Start(os.Stdin, os.Stdout)
 }
+
+const SHIFU = `
+ _ _ _ _ _ _ _ _ __ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+|      ______    __      __    __________    __________    ___      ___      |
+|    /   ____|  |  |    |  |  |___    ___|  |   _______|  |   |    |   |     |
+|   |   |       |  |    |  |      |  |      |   |         |   |    |   |     |
+|   |   |___    |  |____|  |      |  |      |   |____     |   |    |   |     |
+|    \____  \   |   ____   |      |  |      |    ____|    |   |    |   |     |
+|         |  |  |  |    |  |      |  |      |   |         |   |    |   |     |
+|    _____|  |  |  |    |  |   ___|  |___   |   |         |   |____|   |     |
+|   |______ /   |__|    |__|  |__________|  |___|          \__________/      |
+|                                                                            |
+|   Programming Language                                                     |
+|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ __|
+
+`
