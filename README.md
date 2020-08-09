@@ -18,6 +18,158 @@ This is a personal project intended to write my own interpreter in go lang.
 ```
 go run main.go
 ```
+<br/>
+
+---
+
+## Integer Arithmetic :
+
+```
+3 + 4 * 5 == 3 * 1 + 4 * 5
+
+true
+```
+
+```
+3 + 4; -5 * 5
+
+-25
+```
+
+<br/>
+
+---
+
+
+## Using Functions :
+
+```
+let double = func(x) { x * 2; };
+double(5);
+
+10
+```
+
+```
+let add = func(x, y) { x + y; }; 
+add(5 + 5, add(5,5));
+
+20
+```
+
+<br/>
+
+---
+
+## Closures :
+
+```
+let newAdder = func(x){
+		func(y) { x + y };
+	};
+	
+	let addTwo = newAdder(2);
+	addTwo(2);
+
+
+4  
+```
+
+<br/>
+
+---
+
+## Enclosed Environments : 
+
+```
+let first = 10;
+let second = 10;
+let third = 10;
+
+let ourFunction = func(first) {
+  let second = 20;
+
+  first + second + third;
+};
+
+ourFunction(20) + first + second;
+
+
+70
+```
+
+<br/>
+
+---
+
+### IF Else Statements:
+
+```
+if(10 > 1){
+			if(10 > 1){
+				return 10;
+			}
+			return 1;
+		}
+
+
+10    
+```
+<br/>
+
+---
+
+
+### Arrays:
+
+```
+let myArray = [1, 2, 3]; 
+myArray[2];
+
+3
+```
+
+<br/>
+
+---
+
+
+### Builtin Functions:
+
+#### len
+```
+len([1, 2, 3])
+
+3
+```
+
+#### push
+```
+push([], 1)
+
+```
+
+#### pop
+```
+pop([1, 2, 3], 1)
+
+```
+#### first
+
+```
+first([3, 1, 9])
+
+3
+```
+#### last
+
+```
+last([3, 1, 9])
+
+9
+```
+
+
 
 ### *Language Featuers*:
 
