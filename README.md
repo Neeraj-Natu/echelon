@@ -50,6 +50,12 @@ double(5);
 10
 ```
 
+<br/>
+
+---
+
+## Higher order Functions :
+
 ```
 let add = func(x, y) { x + y; }; 
 add(5 + 5, add(5,5));
@@ -180,12 +186,11 @@ last([3, 1, 9])
 ### *Language Featuers*:
 
 - Dynamically typed
-- Supports higher order functions
+- Supports higher order functions, or in other words functions are first class citizens
 - Supports closures
 - Supports integer arithmetic
 - Supports strings, integers, arrays and maps
 - Supports builtin functions
-- Functions are first class citizens
 - Completely written in golang
 
 ---
