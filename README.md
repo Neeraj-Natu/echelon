@@ -13,6 +13,12 @@ This is a personal project intended to write my own interpreter in go lang.
 
 ---
 
+### *Getting Started*:
+
+```
+go run main.go
+```
+
 ### *Language Featuers*:
 
 - Dynamically typed
