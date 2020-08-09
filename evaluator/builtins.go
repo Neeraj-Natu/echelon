@@ -86,8 +86,9 @@ var builtins = map[string]*object.Builtin{
 			if index < 0 || index >= int64(length) {
 				return newError("Index to pop from is out of bounds!")
 			}
-			arr.Elements = append(arr.Elements[:index], arr.Elements[index:]...)
-			return arr
+			newElements := make([]object.Object, length-1, length-1)
+			newElements = append(arr.Elements[:index], arr.Elements[index+1:]...)
+			return &object.Array{Elements: newElements}
 		},
 	},
 }
