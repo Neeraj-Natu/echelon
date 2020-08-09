@@ -70,6 +70,14 @@ true
 
 ---
 
+### Using Strings and String concatenation:
+
+```
+"Inner " + " " + " Peace!"
+
+
+Inner Peace!
+```
 
 ### Using Functions :
 
