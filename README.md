@@ -163,12 +163,7 @@ myArray[2];
 3
 ```
 
-<br/>
-
----
-
-
-### Builtin Functions:
+### Array Builtin Functions:
 
 #### len
 ```
