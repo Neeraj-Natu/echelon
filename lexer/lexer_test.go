@@ -218,6 +218,7 @@ func TestStringToken(t *testing.T) {
 	"foobar"
 	"foo bar"
 	[1,2];
+	{"foo": "bar"}
 	`
 	tests := []struct {
 		expectedType    token.TokenType
@@ -231,6 +232,11 @@ func TestStringToken(t *testing.T) {
 		{token.INT, "2"},
 		{token.RBRACE, "]"},
 		{token.SEMICOLON, ";"},
+		{token.LCBRACE, "{"},
+		{token.STRING, "foo"},
+		{token.COLON, ":"},
+		{token.STRING, "bar"},
+		{token.RCBRACE, "}"},
 		{token.EOF, ""},
 	}
 

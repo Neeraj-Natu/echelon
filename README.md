@@ -13,6 +13,33 @@ This is a personal project intended to write my own interpreter in go lang.
 
 ---
 
+## Introduction:
+
+- Any thing that is written in the language goes first through the Lexer where the input is divided and assigned respective Tokens.
+- Once tokens are ready the Parser kicks in and parses the input tokens, it also checks the grammer of the input and raises parsing errors if any.
+- The parser creates an AST (Abstract Syntax Tree) which becomes the input for the evaluator which reads this tree.
+- The Evaluator has it's own Environment where it stores any temporary variables and evaluated the input syntax tree, which may contain any of the below items.
+- Once the evaluator is done it outputs the result of the function if there is any return statement in the input.
+
+<br/>
+
+---
+
+
+### *Language Featuers*:
+
+- Dynamically typed
+- Supports higher order functions, or in other words functions are first class citizens
+- Supports closures
+- Supports integer arithmetic
+- Supports strings, integers, arrays and maps
+- Supports builtin functions
+- Completely written in golang
+- Maps can have Strings, Integers or Booleans as keys.
+
+<br/>
+---
+
 ### *Getting Started*:
 
 ```
@@ -22,7 +49,7 @@ go run main.go
 
 ---
 
-## Integer Arithmetic :
+### Integer Arithmetic :
 
 ```
 3 + 4 * 5 == 3 * 1 + 4 * 5
@@ -41,7 +68,7 @@ true
 ---
 
 
-## Using Functions :
+### Using Functions :
 
 ```
 let double = func(x) { x * 2; };
@@ -54,7 +81,7 @@ double(5);
 
 ---
 
-## Higher order Functions :
+### Higher order Functions :
 
 ```
 let add = func(x, y) { x + y; }; 
@@ -67,7 +94,7 @@ add(5 + 5, add(5,5));
 
 ---
 
-## Closures :
+### Closures :
 
 ```
 let newAdder = func(x){
@@ -85,7 +112,7 @@ let newAdder = func(x){
 
 ---
 
-## Enclosed Environments : 
+### Enclosed Environments : 
 
 ```
 let first = 10;
@@ -183,17 +210,6 @@ last([3, 1, 9])
 ---
 
 
-### *Language Featuers*:
-
-- Dynamically typed
-- Supports higher order functions, or in other words functions are first class citizens
-- Supports closures
-- Supports integer arithmetic
-- Supports strings, integers, arrays and maps
-- Supports builtin functions
-- Completely written in golang
-
----
 
 ### *Language Parts*:
 
