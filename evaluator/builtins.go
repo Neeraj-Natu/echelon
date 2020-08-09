@@ -1,6 +1,8 @@
 package evaluator
 
 import (
+	"fmt"
+
 	"github.com/Neeraj-Natu/shifu/object"
 )
 
@@ -89,6 +91,14 @@ var builtins = map[string]*object.Builtin{
 			newElements := make([]object.Object, length-1, length-1)
 			newElements = append(arr.Elements[:index], arr.Elements[index+1:]...)
 			return &object.Array{Elements: newElements}
+		},
+	},
+	"puts": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			for _, arg := range args {
+				fmt.Println(arg.Inspect())
+			}
+			return NULL
 		},
 	},
 }
