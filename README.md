@@ -218,47 +218,47 @@ last([3, 1, 9])
 ### Hashes:
 
 ```
-{"foo": 5}
-["foo"]
+{"foo": 5}["foo"]
+
 
 5
 ```
 
 Strings as keys:
 ```
-{"foo": 5};
-["foo"]
+{"foo": 5};["foo"]
+
 
 5
 ```
 
 Integers as Keys:
 ```
-{300: 5}
-[300]
+{300: 5}[300]
+
 
 5
 ```
 
 Booleans as Keys:
 ```
-{true: 5}
-[true]
+{true: 5}[true]
+
 
 5
 ```
 
 Expressions as Keys:
 ```
-{"th"+"ree": 23421}
-["three"]
+{"th"+"ree": 23421}["three"]
+
 
 23421
 ```
 
 ```
-{100 < 3 : 4455}
-[false]
+{100 < 3 : 4455}[false]
+
 
 4455
 ```
