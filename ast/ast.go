@@ -328,19 +328,19 @@ func (ie *IndexExpression) String() string {
 	return out.String()
 }
 
-//MapLiteral holds the maps in the language. this implements the expression interface so itself it's an expression.
-type MapLiteral struct {
+//HashLiteral holds the maps in the language. this implements the expression interface so itself it's an expression.
+type HashLiteral struct {
 	Token token.Token // the '{' token
 	Pairs map[Expression]Expression
 }
 
-func (ml *MapLiteral) expressionNode()      {}
-func (ml *MapLiteral) TokenLiteral() string { return ml.Token.Literal }
-func (ml *MapLiteral) String() string {
+func (hl *HashLiteral) expressionNode()      {}
+func (hl *HashLiteral) TokenLiteral() string { return hl.Token.Literal }
+func (hl *HashLiteral) String() string {
 	var out bytes.Buffer
 
 	pairs := []string{}
-	for key, value := range ml.Pairs {
+	for key, value := range hl.Pairs {
 		pairs = append(pairs, key.String()+":"+value.String())
 	}
 	out.WriteString("{")

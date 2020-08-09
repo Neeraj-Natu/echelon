@@ -32,10 +32,11 @@ This is a personal project intended to write my own interpreter in go lang.
 - Supports higher order functions, or in other words functions are first class citizens
 - Supports closures
 - Supports integer arithmetic
-- Supports strings, integers, arrays and maps
+- Supports strings, integers, arrays and hashs
 - Supports builtin functions
 - Completely written in golang
-- Maps can have Strings, Integers or Booleans as keys.
+- Hashs can have Strings, Integers or Booleans as keys.
+- Also anything that evaluates to Strings, Integers or Booleans can be used as Keys in Hashs.
 
 <br/>
 
