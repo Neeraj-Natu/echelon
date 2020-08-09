@@ -3,6 +3,7 @@ package object
 import (
 	"bytes"
 	"fmt"
+	"hash/fnv"
 	"strings"
 
 	"github.com/Neeraj-Natu/shifu/ast"
@@ -27,6 +28,7 @@ const (
 	STRING_OBJ       = "STRING"
 	BUILTIN_OBJ      = "BUILTIN"
 	ARRAY_OBJ        = "ARRAY"
+	HASH_OBJ         = "HASH"
 )
 
 //Integer implements Object interface. Every ast.IntegerLiteral is converted to this Object.Integer
@@ -118,6 +120,8 @@ type Builtin struct {
 func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
 func (b *Builtin) Inspect() string  { return "builtin function" }
 
+//Array implements the Object interface. Every ast.ArrayLiteral is converted to this Object.Array
+//while evaluating Arrays in the language, reference to this struct is then passed on.
 type Array struct {
 	Elements []Object
 }
@@ -135,4 +139,74 @@ func (a *Array) Inspect() string {
 	out.WriteString(strings.Join(elements, ", "))
 	out.WriteString("]")
 	return out.String()
+}
+
+//HashKey is the hashkey that stores the hashed value of the keys for HashLiterals.
+//this is used to find if and HashLiteral has a key and returns the value that is stored against that Key in the hashLiteral.
+//HashKey can have keys as string, integers or booleans so has differnt HashKey() methods for each of the LiteralType to compare keys.
+type HashKey struct {
+	Type  ObjectType
+	Value uint64
+}
+
+func (b *Boolean) HashKey() HashKey {
+	var value uint64
+
+	if b.Value {
+		value = 1
+	} else {
+		value = 0
+	}
+
+	return HashKey{Type: b.Type(), Value: value}
+}
+
+func (i *Integer) HashKey() HashKey {
+	return HashKey{Type: i.Type(), Value: uint64(i.Value)}
+}
+
+func (s *String) HashKey() HashKey {
+	h := fnv.New64a()
+	h.Write([]byte(s.Value))
+
+	return HashKey{Type: s.Type(), Value: h.Sum64()}
+}
+
+// Type of Values in the Hash.Pairs which basically can be anything.
+type HashPair struct {
+	Key   Object
+	Value Object
+}
+
+// Hash is the in built datastructure in Shifu language that supports storing the data as Hashes or Maps in other languages.
+// It can have Strings, Boolean or Integers as keys which have differnt implementations used to define their own HashKeys
+// Those HashKeys are used to ascertain if the keys are similar or different and to compare two hashes or values in hashes.
+// Also the HashKeys are used to locate and take out the values from Hashes just like any Map.
+// As in any other language Hashes are prone to have hash collision in shifu as well.
+type Hash struct {
+	Pairs map[HashKey]HashPair
+}
+
+func (h *Hash) Type() ObjectType {
+	return HASH_OBJ
+}
+
+func (h *Hash) Inspect() string {
+	var out bytes.Buffer
+
+	pairs := []string{}
+	for _, pair := range h.Pairs {
+		pairs = append(pairs, fmt.Sprintf("%s: %s",
+			pair.Key.Inspect(), pair.Value.Inspect()))
+	}
+	out.WriteString("{")
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString("}")
+
+	return out.String()
+}
+
+//This interface is used in evaluator to check if a given object is usable as a hash key
+type Hashable interface {
+	HashKey() HashKey
 }

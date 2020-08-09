@@ -18,7 +18,8 @@ This is a personal project intended to write my own interpreter in go lang.
 - Any input that is written in the language goes first through the Lexer where the input is divided and assigned respective Tokens.
 - Once tokens are ready the Parser kicks in and parses the input tokens, it also checks the grammer of the input and raises parsing errors if any.
 - The parser creates an AST (Abstract Syntax Tree) which becomes the input for the evaluator which reads this tree.
-- The Evaluator has it's own Environment where it stores any temporary variables and evaluated the input syntax tree, which may contain any of the below items.
+- The Evaluator converts the tokens within the AST into the Objects which are stored in Environment.
+- The Evaluator has it's own Environment where it stores any temporary variables and evaluated.
 - Once the evaluator is done it outputs the result of the function if there is any return statement in the input.
 
 <br/>
