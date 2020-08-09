@@ -99,11 +99,11 @@ add(5 + 5, add(5,5));
 
 ```
 let newAdder = func(x){
-		func(y) { x + y };
-	};
-	
-	let addTwo = newAdder(2);
-	addTwo(2);
+  func(y) { x + y };
+  };
+
+let addTwo = newAdder(2);
+addTwo(2);
 
 
 4  
