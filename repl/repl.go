@@ -48,9 +48,10 @@ func Start(in io.Reader, out io.Writer) {
 			printParserErrors(out, p.Errors())
 			continue
 		}
+		//io.WriteString(out, "--------- Parser Output ---------------------------")
 		//io.WriteString(out, program.String())
 		//io.WriteString(out, "\n")
-
+		//io.WriteString(out, "------------------------------------")
 		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())
@@ -60,7 +61,7 @@ func Start(in io.Reader, out io.Writer) {
 }
 
 func printParserErrors(out io.Writer, errors []string) {
-	io.WriteString(out, SHIFU)
+	io.WriteString(out, ACCIDENTS)
 	io.WriteString(out, "Learning code is an art that takes years to master. Do not be disappointed if you have failed !! \n")
 	io.WriteString(out, "parser errors: \n")
 	for _, msg := range errors {
@@ -68,12 +69,10 @@ func printParserErrors(out io.Writer, errors []string) {
 	}
 }
 
-const SHIFU = `		__,__
-   ____           __________     ________     
- /       |     |      |         |            |        |
-|        |     |      |         |            |        |
- \____   |_____|      |         |________    |        |
-      \  |     |      |         |            |        |
-       | |     |      |         |            |        |
-______/  |     |  ____|_____    |             \______/
+const ACCIDENTS = `	
+ _____________________________
+|                             |
+|  There are no accidents !!  |                      
+|_____________________________|
+
 `
