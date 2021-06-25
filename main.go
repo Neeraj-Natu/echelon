@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"os/user"
@@ -9,6 +10,10 @@ import (
 )
 
 func main() {
+
+	outputPtr := flag.String("output", "lang", "output from lexer, parser or langauge itself")
+	flag.Parse()
+
 	user, err := user.Current()
 	if err != nil {
 		panic(err)
@@ -17,7 +22,17 @@ func main() {
 	fmt.Printf("Hello %s! \n",
 		user.Username)
 	fmt.Printf("Attain inner peace by exploring the language!! \n")
-	repl.Start(os.Stdin, os.Stdout)
+
+	if *outputPtr == "lexer" {
+		repl.StartLexer(os.Stdin, os.Stdout)
+	}
+	if *outputPtr == "parser" {
+		repl.StartParser(os.Stdin, os.Stdout)
+	}
+	if *outputPtr == "lang" {
+		repl.StartLang(os.Stdin, os.Stdout)
+	}
+
 }
 
 const SHIFU = `
